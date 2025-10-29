@@ -2,11 +2,15 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Create our sentence generator
-        SentenceGenerator generator = new SentenceGenerator();
+        // Create our sentence generators
+        SentenceGenerator greedyGenerator = new SentenceGenerator();
+        MarkovSentenceGenerator markovGenerator = new MarkovSentenceGenerator();
+        BeamSearchSentenceGenerator beamGenerator = new BeamSearchSentenceGenerator();
         
-        // Add some sample data
-        addSampleData(generator);
+        // Add sample data to all generators
+        addSampleData(greedyGenerator);
+        addSampleData(markovGenerator);
+        addSampleData(beamGenerator);
         
         // Create scanner for user input
         Scanner scanner = new Scanner(System.in);
@@ -15,11 +19,16 @@ public class Main {
         System.out.print("Enter a starting word: ");
         String startWord = scanner.nextLine();
         
-        // Generate and print the sentence
-        System.out.println("Generated sentence: " + generator.generateSentence(startWord));
+        // Generate and print sentences using all algorithms
+        System.out.println("\nGreedy Algorithm: " + 
+            greedyGenerator.generateSentence(startWord));
+        System.out.println("Markov Chain: " + 
+            markovGenerator.generateSentence(startWord));
+        System.out.println("Beam Search: " + 
+            beamGenerator.generateSentence(startWord));
     }
     
-    private static void addSampleData(SentenceGenerator generator) {
+    private static void addSampleData(AbstractSentenceGenerator generator) {
         // Create some words with their statistics
         Word the = new Word("the");
         Word cat = new Word("cat");
@@ -40,7 +49,6 @@ public class Main {
         Word a = new Word("a");
         Word beautiful = new Word("beautiful");
         Word day = new Word("day");
-        // New words for "have" sentences
         Word have = new Word("have");
         Word you = new Word("you");
         Word ever = new Word("ever");
@@ -48,36 +56,84 @@ public class Main {
         Word rainbow = new Word("rainbow");
         Word good = new Word("good");
         Word time = new Word("time");
+        // Additional words for more variety
+        Word quickly = new Word("quickly");
+        Word slowly = new Word("slowly");
+        Word jumped = new Word("jumped");
+        Word over = new Word("over");
+        Word fence = new Word("fence");
+        Word through = new Word("through");
+        Word garden = new Word("garden");
+        Word chased = new Word("chased");
+        Word playfully = new Word("playfully");
+        Word and = new Word("and");
+        Word want = new Word("want");
+        Word play = new Word("play");
+        Word sleep = new Word("sleep");
+        Word eat = new Word("eat");
+        Word dinner = new Word("dinner");
+        Word lunch = new Word("lunch");
+        Word wonderful = new Word("wonderful");
+        Word exciting = new Word("exciting");
+        Word adventure = new Word("adventure");
+        Word walked = new Word("walked");
         
-        // Add words to generator
+        // Add all words to generator
         for (Word word : new Word[]{the, cat, dog, sat, ran, on, in, mat, park, 
                                   i, love, to, read, books, today, is, a, beautiful, day,
-                                  have, you, ever, seen, rainbow, good, time}) {
+                                  have, you, ever, seen, rainbow, good, time,
+                                  quickly, slowly, jumped, over, fence, through, garden,
+                                  chased, playfully, and, want, play, sleep, eat,
+                                  dinner, lunch, wonderful, exciting, adventure, walked}) {
             generator.addWord(word);
         }
+
+        // Add varied paths for "the"
+        addSentenceBigrams(generator, new Word[]{the, cat, jumped, over, the, fence});
+        addSentenceBigrams(generator, new Word[]{the, dog, ran, through, the, garden});
+        addSentenceBigrams(generator, new Word[]{the, cat, slowly, walked, in, the, park});
+        addSentenceBigrams(generator, new Word[]{the, dog, playfully, chased, the, cat});
         
-        // Add bigrams with their frequencies
-        addSentenceBigrams(generator, new Word[]{the, cat, sat, on, the, mat});
-        addSentenceBigrams(generator, new Word[]{the, dog, ran, in, the, park});
+        // Add varied paths for "i"
         addSentenceBigrams(generator, new Word[]{i, love, to, read, books});
+        addSentenceBigrams(generator, new Word[]{i, want, to, play, and, sleep});
+        addSentenceBigrams(generator, new Word[]{i, have, to, eat, dinner});
+        addSentenceBigrams(generator, new Word[]{i, love, a, good, adventure});
+        
+        // Add varied paths for "today"
         addSentenceBigrams(generator, new Word[]{today, is, a, beautiful, day});
+        addSentenceBigrams(generator, new Word[]{today, is, a, wonderful, adventure});
+        addSentenceBigrams(generator, new Word[]{today, is, exciting, and, good});
+        
+        // Add varied paths for "have"
         addSentenceBigrams(generator, new Word[]{have, you, ever, seen, a, rainbow});
         addSentenceBigrams(generator, new Word[]{have, a, good, time});
-        
-        // Set start/end counts
+        addSentenceBigrams(generator, new Word[]{have, a, wonderful, day});
+        addSentenceBigrams(generator, new Word[]{have, to, eat, lunch});        // Set start/end counts with more variety
+        the.incrementStartCount();
         the.incrementStartCount();
         the.incrementStartCount();
         i.incrementStartCount();
+        i.incrementStartCount();
+        today.incrementStartCount();
         today.incrementStartCount();
         have.incrementStartCount();
         have.incrementStartCount();
         
-        mat.incrementEndCount();
+        // Set end counts with more variety
+        fence.incrementEndCount();
+        garden.incrementEndCount();
         park.incrementEndCount();
+        cat.incrementEndCount();
         books.incrementEndCount();
+        sleep.incrementEndCount();
+        dinner.incrementEndCount();
+        adventure.incrementEndCount();
+        day.incrementEndCount();
         day.incrementEndCount();
         rainbow.incrementEndCount();
         time.incrementEndCount();
+        lunch.incrementEndCount();
         
         // Set total counts (simplified for demonstration)
         for (Word word : new Word[]{the, cat, dog, sat, ran, on, in, mat, park, 
@@ -89,7 +145,7 @@ public class Main {
         to.incrementTotalCount();
     }
     
-    private static void addSentenceBigrams(SentenceGenerator generator, Word[] words) {
+    private static void addSentenceBigrams(AbstractSentenceGenerator generator, Word[] words) {
         for (int i = 0; i < words.length - 1; i++) {
             generator.addBigram(words[i], words[i + 1]);
         }

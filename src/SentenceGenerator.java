@@ -1,6 +1,31 @@
 import java.util.*;
 
-public class SentenceGenerator {
+/**
+ * Greedy Algorithm Implementation for Sentence Generation
+ * 
+ * Core Concept:
+ * The greedy algorithm always chooses the locally optimal choice at each step.
+ * In this context, it means always selecting the most frequently occurring next word.
+ * 
+ * How it works:
+ * 1. Start with the given word
+ * 2. At each step:
+ *    - Look at all possible next words
+ *    - Choose the one that appears most frequently after the current word
+ *    - Add it to the sentence
+ *    - Repeat until reaching an end word or max length
+ * 
+ * Advantages:
+ * - Simple and fast
+ * - Predictable results
+ * - Always finds the most common path
+ * 
+ * Limitations:
+ * - May miss better overall sentences by focusing on local choices
+ * - Can get stuck in short, common patterns
+ * - No variety in output (same input = same output)
+ */
+public class SentenceGenerator extends AbstractSentenceGenerator {
     private Map<String, Word> wordMap;
     private Map<Word, Map<Word, Bigram>> bigramMap;
     private static final int MAX_SENTENCE_LENGTH = 20;
@@ -22,42 +47,37 @@ public class SentenceGenerator {
     }
     
     public String generateSentence(String startWordText) {
-        Word startWord = wordMap.get(startWordText.toLowerCase());
-        if (startWord == null) {
-            return "Error: Starting word not found.";
-        }
+        // Get starting word
+        Word currentWord = wordMap.get(startWordText.toLowerCase());
+        if (currentWord == null) return "Error: Starting word not found.";
         
+        // Build sentence
         List<String> sentence = new ArrayList<>();
-        Word currentWord = startWord;
         sentence.add(currentWord.getText());
         
+        // Simple greedy: always pick the most frequent next word
         while (sentence.size() < MAX_SENTENCE_LENGTH) {
-            Word nextWord = findNextWord(currentWord);
-            if (nextWord == null) break;
+            Map<Word, Bigram> nextWords = bigramMap.get(currentWord);
+            if (nextWords == null || nextWords.isEmpty()) break;
             
+            // Find word with highest count
+            Word nextWord = null;
+            int maxCount = -1;
+            for (Map.Entry<Word, Bigram> entry : nextWords.entrySet()) {
+                if (entry.getValue().getCount() > maxCount) {
+                    maxCount = entry.getValue().getCount();
+                    nextWord = entry.getKey();
+                }
+            }
+            
+            if (nextWord == null) break;
             sentence.add(nextWord.getText());
             currentWord = nextWord;
             
-            // Stop if we've reached a word that commonly ends sentences
-            if (currentWord.getEndCount() > 0 && 
-                currentWord.getEndCount() >= currentWord.getTotalCount() / 2) {
-                break;
-            }
+            // Stop if it's an ending word
+            if (currentWord.getEndCount() > 0) break;
         }
         
         return String.join(" ", sentence) + ".";
-    }
-    
-    private Word findNextWord(Word currentWord) {
-        Map<Word, Bigram> nextWords = bigramMap.get(currentWord);
-        if (nextWords == null || nextWords.isEmpty()) {
-            return null;
-        }
-        
-        // Find the word with highest bigram count (greedy approach)
-        return nextWords.entrySet().stream()
-            .max(Comparator.comparingInt(e -> e.getValue().getCount()))
-            .map(Map.Entry::getKey)
-            .orElse(null);
     }
 }
