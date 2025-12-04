@@ -1,0 +1,354 @@
+/*
+    styles.css
+    This CSS file contains all the custom styling for the Text Generator AI application.
+    It provides a dark theme with blue accents and includes styles for various UI components
+    including text areas, sliders, combo boxes, checkboxes, tables, and statistical displays.
+
+    The styling follows a consistent design system with modern gradients, rounded corners,
+    and appropriate color contrasts for better user experience and accessibility.
+
+    Written by Arafat Khan for CS4485.OW1, Senior Project, starting September 13, 2025.
+        NetID: AXK220194
+        Last modified: September 25, 2025
+*/
+
+/* ================================
+   📝 Text Area Styling ARAFAT KHAN
+   ================================ */
+
+/* Main Text Area Styling
+   Dark background with light text for optimal readability
+   Rounded corners and subtle borders for modern appearance */
+.text-area {
+    -fx-background-color: #334155;
+    -fx-background-radius: 8;
+    -fx-border-color: #475569;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-text-fill: #f1f5f9;
+    -fx-font-size: 14px;
+    -fx-padding: 12;
+}
+
+/* Text Area Content Styling
+   Ensures consistent background within the scrollable content area */
+.text-area .content {
+    -fx-background-color: #334155;
+    -fx-background-radius: 8;
+}
+
+/* Scroll Pane Transparency
+   Makes the scroll pane blend with text area background */
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+
+/* Vertical Scroll Bar Styling
+   Custom scroll bar with dark track and medium gray thumb */
+.text-area .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.text-area .scroll-bar:vertical .track {
+    -fx-background-color: #1e293b;
+}
+
+.text-area .scroll-bar:vertical .thumb {
+    -fx-background-color: #475569;
+}
+
+/* ================================
+   🎚️ Slider Styling
+   ================================ */
+
+/* Slider Track Styling
+   Dark background track with rounded edges */
+.slider .track {
+    -fx-background-color: #334155;
+    -fx-background-radius: 4;
+    -fx-pref-height: 6;
+}
+
+/* Slider Thumb Styling
+   Blue circular thumb for interactive control */
+.slider .thumb {
+    -fx-background-color: #3b82f6;
+    -fx-background-radius: 8;
+    -fx-pref-height: 16;
+    -fx-pref-width: 16;
+}
+
+/* Slider Axis/Tick Labels
+   Light gray text for tick mark labels */
+.slider .axis {
+    -fx-tick-label-fill: #94a3b8;
+}
+
+/* ================================
+   📊 ComboBox Styling
+   ================================ */
+
+/* ComboBox Base Styling
+   Dark background with border matching the theme */
+.combo-box {
+    -fx-background-color: #334155;
+    -fx-background-radius: 6;
+    -fx-border-color: #475569;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-text-fill: #f1f5f9;
+}
+
+/* ComboBox List Cell Styling
+   Consistent text color for dropdown items */
+.combo-box .list-cell {
+    -fx-background-color: #334155;
+    -fx-text-fill: #f1f5f9;
+}
+
+/* ComboBox Arrow Styling
+   Light gray arrow for dropdown indicator */
+.combo-box .arrow {
+    -fx-background-color: #94a3b8;
+}
+
+/* ComboBox Popup Styling
+   Dropdown menu with rounded corners and border */
+.combo-box-popup .list-view {
+    -fx-background-color: #334155;
+    -fx-background-radius: 6;
+    -fx-border-color: #475569;
+    -fx-border-radius: 6;
+}
+
+/* ComboBox Popup Items
+   Individual item styling with padding */
+.combo-box-popup .list-cell {
+    -fx-background-color: #334155;
+    -fx-text-fill: #f1f5f9;
+    -fx-padding: 8 12;
+}
+
+/* ComboBox Hover Effect
+   Blue background highlight on item hover */
+.combo-box-popup .list-cell:filled:hover {
+    -fx-background-color: #3b82f6;
+    -fx-text-fill: white;
+}
+
+/* ================================
+   ☑️ CheckBox Styling
+   ================================ */
+
+/* CheckBox Text Styling
+   Light gray text for checkbox labels */
+.check-box {
+    -fx-text-fill: #cbd5e1;
+}
+
+/* CheckBox Box Styling
+   Dark background with border for unchecked state */
+.check-box .box {
+    -fx-background-color: #334155;
+    -fx-border-color: #475569;
+    -fx-border-radius: 4;
+}
+
+/* CheckBox Selected Mark
+   Blue check mark for selected state */
+.check-box:selected .mark {
+    -fx-background-color: #3b82f6;
+}
+
+/* CheckBox Selected Box
+   Maintains dark background with blue border when selected */
+.check-box:selected .box {
+    -fx-background-color: #334155;
+    -fx-border-color: #3b82f6;
+}
+
+/* ================================
+   💡 Suggestion Items
+   ================================ */
+
+/* Suggestion Item Base Styling
+   Used for auto-complete and suggestion dropdowns */
+.suggestion-item {
+    -fx-background-color: #334155;
+    -fx-background-radius: 6;
+    -fx-padding: 8 12;
+    -fx-cursor: hand;
+}
+
+/* Suggestion Item Hover Effect
+   Blue background highlight on hover */
+.suggestion-item:hover {
+    -fx-background-color: #3b82f6;
+}
+
+/* ================================
+   📈 Statistics Cards
+   ================================ */
+
+/* Stat Card Container Styling
+   Dark cards with shadow effects for statistical displays */
+.stat-card {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0.1, 0, 3);
+}
+
+/* ================================
+   🔄 Progress Indicators
+   ================================ */
+
+/* Progress Indicator Styling
+   Green progress color for loading and processing states */
+.progress-indicator {
+    -fx-progress-color: #10b981;
+}
+
+/* Progress Indicator Background
+   Transparent background for the indicator container */
+.progress-indicator .indicator {
+    -fx-background-color: transparent;
+}
+
+/* ================================
+   📋 Table Improvements
+   ================================ */
+
+/* Table Header Styling
+   Gradient background for column headers */
+.table-view .column-header-background {
+    -fx-background-color: linear-gradient(to bottom, #1e40af, #3b82f6);
+}
+
+/* Table Column Header Styling
+   Individual header cells with subtle borders */
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(255,255,255,0.1);
+}
+
+/* Table Cell Styling
+   Light text with adequate padding for readability */
+.table-view .table-cell {
+    -fx-text-fill: #e2e8f0;
+    -fx-border-color: transparent;
+    -fx-padding: 12 15;
+}
+
+/* Table Row Striping
+   Alternating row colors for better readability */
+.table-row-cell:odd {
+    -fx-background-color: #1a2438;
+}
+
+.table-row-cell:even {
+    -fx-background-color: #1e293b;
+}
+
+/* Table Row Hover Effect
+   Subtle highlight on row hover */
+.table-row-cell:filled:hover {
+    -fx-background-color: #2d3748;
+}
+
+/* ================================
+   🚫 Remove Table Sorting Arrows
+   ================================ */
+
+/* Table Sorting Arrow Removal
+   Disables and hides sorting indicators in table headers */
+.table-view .column-header .sort-order-dots {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header .sort-order {
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header .arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-shape: null;
+}
+
+.table-view .column-header .sort-order-dots .dot {
+    -fx-background-color: transparent;
+}
+
+/* Disable Table Sorting Interaction
+   Removes cursor change and hover effects for sorting */
+.table-view .column-header {
+    -fx-cursor: default;
+}
+
+.table-view .column-header:hover {
+    -fx-background-color: transparent;
+}
+
+/* ================================
+   📊 Word Statistics Specific Styles
+   ================================ */
+
+/* Statistics Grid Layout
+   Transparent background for statistical data grids */
+.stat-grid {
+    -fx-background-color: transparent;
+}
+
+/* Enhanced Stat Card Styling
+   Improved statistics cards with better shadows and padding */
+.stat-card {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 10;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 2);
+}
+
+/* Table Header Improvements
+   Enhanced gradient and border styling for word statistics tables */
+.table-view .column-header {
+    -fx-background-color: linear-gradient(to bottom, #1e40af, #3b82f6);
+    -fx-border-color: rgba(255,255,255,0.1);
+    -fx-border-width: 0 1 0 0;
+}
+
+/* Last Column Header Border Removal
+   Removes right border from the last column header */
+.table-view .column-header:last-child {
+    -fx-border-width: 0;
+}
+
+/* Column Header Label Styling
+   White bold text with centered alignment */
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER;
+}
+
+/* Enhanced Input Area Styling
+   Improved text areas for word statistics input */
+.text-area {
+    -fx-background-color: #334155;
+    -fx-background-radius: 6;
+    -fx-border-color: #475569;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-text-fill: #f1f5f9;
+    -fx-font-size: 13px;
+    -fx-padding: 10;
+}
+
+/* Text Area Content Background
+   Consistent background color for text content */
+.text-area .content {
+    -fx-background-color: #334155;
+}

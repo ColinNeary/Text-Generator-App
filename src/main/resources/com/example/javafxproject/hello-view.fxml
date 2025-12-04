@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.control.Button?>
+
+<!--
+    hello-view.fxml
+    This FXML file defines the simple welcome interface for the Text Generator AI application.
+    It provides a basic layout with a welcome label and hello button for user interaction.
+    This serves as a starter template or welcome screen for the application.
+
+    The layout uses a centered VBox with consistent padding and spacing for clean presentation.
+    This view demonstrates fundamental FXML structure and JavaFX controller integration.
+
+    Written by Arafat Khan for CS4485.OW1, Senior Project, starting September 13, 2025.
+        NetID: AXK220194
+        Last modified: September 15, 2025
+-->
+
+<!-- Main Layout Container
+     Vertical box layout with center alignment and consistent spacing -->
+<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.javafxproject.HelloController">
+
+    <!-- Padding Configuration
+         Consistent 20px padding on all sides for proper spacing -->
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    </padding>
+
+    <!-- Welcome Text Label
+         Dynamic label that displays welcome message, updated via controller -->
+    <Label fx:id="welcomeText"/>
+
+    <!-- Hello Action Button
+         Interactive button that triggers greeting message when clicked -->
+    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+</VBox>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<!--
+    main-menu.fxml
+    This FXML file defines the main menu layout for the Text Generator AI application.
+    It uses a BorderPane layout with gradient background and includes a top header,
+    left sidebar navigation, center content area, and bottom footer.
+
+    The interface features a modern design with semi-transparent elements and
+    provides navigation buttons for different application functionalities including
+    file import, word statistics, text generation, and auto-complete features.
+
+    Written by Arafat Khan for CS4485.OW1, Senior Project, starting September 13, 2025.
+        NetID: AXK220194
+        Last modified: September 22, 2025
+-->
+
+<BorderPane  xmlns="http://javafx.com/javafx"
+             xmlns:fx="http://javafx.com/fxml"
+             fx:controller="com.example.javafxproject.MainMenuController"
+             prefWidth="1000" prefHeight="600"
+             style="-fx-background-color: linear-gradient(to bottom right, #1e3c72, #2a5298);">
+
+    <!-- 🔝 Top Header Section
+         Contains the main application title and branding
+         Uses HBox layout with centered alignment and dark transparent background -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15"
+              style="-fx-background-color: rgba(0,0,0,0.25); -fx-padding: 15 25;">
+            <Label text="🧠 Text Generator AI Project"
+                   style="-fx-font-size: 22px; -fx-text-fill: white; -fx-font-weight: bold;" />
+        </HBox>
+    </top>
+
+    <!-- 📂 Sidebar Navigation Menu
+         Vertical menu containing navigation buttons for different application features
+         Each button has a unique style class and triggers corresponding controller methods -->
+    <left>
+        <VBox alignment="TOP_CENTER" spacing="15"
+              style="-fx-padding: 30; -fx-background-color: rgba(255,255,255,0.1); -fx-min-width: 250;">
+
+            <!-- Main Menu Title Label -->
+            <Label text="Main Menu"
+                   style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 5;" />
+
+            <!-- Import File Button - Loads file import functionality -->
+            <Button fx:id="importFileButton" text="📂 Import File"
+                    onAction="#loadImportFilePage"
+                    styleClass="menu-button import-btn"
+                    maxWidth="Infinity"
+                    prefHeight="50" />
+
+            <!-- Auto Complete Button - Loads auto-completion functionality -->
+            <Button fx:id="autoCompleteButton" text="⚡ Auto Complete"
+                    onAction="#loadAutoCompletePage"
+                    styleClass="menu-button auto-btn"
+                    maxWidth="Infinity"
+                    prefHeight="50" />
+
+            <!-- Sentence Generation Button - Loads sentence generation features -->
+            <Button fx:id="sentenceGenButton" text="📝 Sentence Generation"
+                    onAction="#loadSentenceGenPage"
+                    styleClass="menu-button gen-btn"
+                    maxWidth="Infinity"
+                    prefHeight="50" />
+
+            <!-- Flexible spacer region to push content upward -->
+            <Region VBox.vgrow="ALWAYS" />
+
+        </VBox>
+    </left>
+
+    <!-- 🎯 Dynamic Content Area
+         Central area where different application views are loaded dynamically
+         Initial state shows welcome message, replaced by feature-specific content -->
+    <center>
+        <StackPane fx:id="contentArea"
+                   style="-fx-background-color: rgba(255,255,255,0.05); -fx-padding: 25;">
+            <Label fx:id="welcomeLabel"
+                   text="Welcome to Text Generator AI"
+                   style="-fx-font-size: 26px; -fx-text-fill: white; -fx-font-weight: bold;" />
+        </StackPane>
+    </center>
+
+    <!-- ⏹️ Footer Section
+         Contains copyright information and application credits -->
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10;">
+            <Label text="© 2025 - All Rights Reserved"
+                   style="-fx-font-size: 12px; -fx-text-fill: white;" />
+        </HBox>
+    </bottom>
+</BorderPane>

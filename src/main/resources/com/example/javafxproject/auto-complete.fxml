@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+
+<!-- Written by Raghav Mukundan, rxm210068 -->
+<!-- Auto Complete interface for word-by-word sentence building -->
+
+<VBox fx:id="root"
+      xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.javafxproject.AutoCompleteController"
+      alignment="TOP_CENTER"
+      spacing="13"
+      prefWidth="1200"
+      prefHeight="750"
+      style="-fx-padding: 20 30 20 30; -fx-background-color: #0f172a;">
+
+    <!-- Header -->
+    <VBox alignment="CENTER" spacing="3">
+        <Label text="⚡ Auto Complete"
+               style="-fx-font-size: 22px; -fx-text-fill: #f8fafc; -fx-font-weight: bold;" />
+        <Label text="Build sentences word-by-word"
+               style="-fx-font-size: 12px; -fx-text-fill: #94a3b8;" />
+    </VBox>
+
+    <!-- Starting Word Input -->
+    <VBox style="-fx-background-color: #1e293b; -fx-background-radius: 8; -fx-padding: 12;"
+          spacing="8" prefWidth="900">
+        <Label text="📝 Starting Word"
+               style="-fx-font-size: 13px; -fx-text-fill: #f8fafc; -fx-font-weight: bold;" />
+        <TextField fx:id="startingWordField" promptText="Enter a starting word..."
+                   style="-fx-background-color: #334155; -fx-background-radius: 6; -fx-border-color: #475569;
+                          -fx-border-radius: 6; -fx-border-width: 1; -fx-text-fill: #f1f5f9;
+                          -fx-font-size: 12px; -fx-padding: 8;" />
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="greedyButton" text="🎯 Greedy" onAction="#startGreedy"
+                    style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #ffffff;
+                           -fx-background-color: #f59e0b; -fx-background-radius: 5; -fx-padding: 8 18;" />
+            <Button fx:id="markovButton" text="🎲 Markov" onAction="#startMarkov"
+                    style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #ffffff;
+                           -fx-background-color: #3b82f6; -fx-background-radius: 5; -fx-padding: 8 18;" />
+            <Button fx:id="finishButton" text="✅ Finish" onAction="#finishSentence"
+                    style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #ffffff;
+                           -fx-background-color: #10b981; -fx-background-radius: 5; -fx-padding: 8 18;" />
+            <Button fx:id="resetButton" text="🔄 Reset" onAction="#resetSentence"
+                    style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #f8fafc;
+                           -fx-background-color: #64748b; -fx-background-radius: 5; -fx-padding: 8 18;" />
+        </HBox>
+    </VBox>
+
+    <!-- Current Sentence -->
+    <VBox style="-fx-background-color: #1e293b; -fx-background-radius: 8; -fx-padding: 12;"
+          spacing="6" prefWidth="900" maxHeight="95">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="📖 Current Sentence"
+                   style="-fx-font-size: 13px; -fx-text-fill: #f8fafc; -fx-font-weight: bold;" />
+            <Label fx:id="wordCountLabel" text="Words: 0"
+                   style="-fx-text-fill: #94a3b8; -fx-font-size: 11px;" />
+        </HBox>
+        <ScrollPane fitToWidth="true" prefHeight="60" maxHeight="60"
+                    style="-fx-background: #334155; -fx-background-color: #334155;">
+            <Label fx:id="currentSentenceLabel" text="Your sentence will appear here..."
+                   wrapText="true"
+                   style="-fx-text-fill: #f1f5f9; -fx-font-size: 12px; -fx-padding: 8;
+                          -fx-background-color: #334155;" />
+        </ScrollPane>
+    </VBox>
+
+    <!-- Word Suggestions -->
+    <VBox style="-fx-background-color: #1e293b; -fx-background-radius: 8; -fx-padding: 12;"
+          spacing="8" prefWidth="900" VBox.vgrow="ALWAYS">
+        <Label text="💡 Word Suggestions (Click to Add)"
+               style="-fx-font-size: 13px; -fx-text-fill: #f8fafc; -fx-font-weight: bold;" />
+        <ScrollPane fitToWidth="true" fitToHeight="true"
+                    style="-fx-background: transparent; -fx-background-color: transparent;"
+                    VBox.vgrow="ALWAYS">
+            <VBox fx:id="suggestionsContainer" spacing="6" style="-fx-padding: 4;">
+                <Label text="Click an algorithm button above to start building your sentence..."
+                       style="-fx-text-fill: #94a3b8; -fx-font-size: 11px; -fx-padding: 10;" />
+            </VBox>
+        </ScrollPane>
+    </VBox>
+
+    <!-- Footer -->
+    <HBox alignment="CENTER" spacing="10">
+        <Button text="← Back to Main Menu" onAction="#goBack"
+                style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;
+                       -fx-background-color: transparent; -fx-border-color: #f59e0b;
+                       -fx-border-radius: 5; -fx-border-width: 1; -fx-padding: 8 14;" />
+    </HBox>
+</VBox>
