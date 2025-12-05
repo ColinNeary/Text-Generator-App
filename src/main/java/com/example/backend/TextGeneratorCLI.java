@@ -1,3 +1,5 @@
+// Written by Kai Chang, cxc210040
+
 package com.example.backend;
 
 import com.example.backend.sentencegen.GreedySentenceGenerator;

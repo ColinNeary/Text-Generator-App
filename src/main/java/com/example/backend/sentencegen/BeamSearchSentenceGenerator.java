@@ -1,9 +1,12 @@
+// Written by Kai Chang, cxc210040
+
 package com.example.backend.sentencegen;
 
 import com.example.backend.DatabaseManager;
 import java.sql.SQLException;
 import java.util.*;
 
+// Generates sentences using beam search: maintains top-k candidate paths simultaneously
 public class BeamSearchSentenceGenerator {
     private final DatabaseManager db;
     private final int beamWidth;
@@ -11,6 +14,7 @@ public class BeamSearchSentenceGenerator {
     private final boolean debugMode;
     private final Random random = new Random();
 
+    // Words that shouldn't end sentences (articles, prepositions, auxiliaries, etc.)
     private static final Set<String> BAD_ENDING_WORDS = new HashSet<>(Arrays.asList(
             "the", "a", "an", "my", "his", "her", "their", "our",
             "in", "on", "at", "by", "for", "with", "about", "to", "from", "of", "into",
@@ -20,6 +24,7 @@ public class BeamSearchSentenceGenerator {
             "very", "too", "quite", "rather", "really", "not"
     ));
 
+    // POS tags that make good sentence endings
     private static final Set<String> GOOD_ENDING_TAGS = new HashSet<>(Arrays.asList(
             "NOUN", "VERB_TRANS", "VERB_INTR", "VERB_PAST", "ADJ", "VERB_ING"
     ));
@@ -31,43 +36,44 @@ public class BeamSearchSentenceGenerator {
         this.debugMode = debugMode;
     }
 
+    
+    // Main generation loop: builds sentences word-by-word across multiple beams
     public SentenceResult generateSentence(String startWord) throws SQLException {
         startWord = startWord.trim().toLowerCase();
         if (!db.wordExists(startWord)) {
             return new SentenceResult(null, 0, "Word not found", "Beam Search");
         }
 
-        // Keep multiple sentence paths
         List<Beam> beams = new ArrayList<>();
         beams.add(new Beam(startWord));
 
         long startTime = System.currentTimeMillis();
 
-        // Build sentences word by word
+        // Iteratively extend each beam with best candidate words
         for (int step = 0; step < maxSentenceLength; step++) {
             List<Beam> allCandidates = new ArrayList<>();
 
             for (Beam beam : beams) {
-                // Check if we should stop this beam
                 if (beam.words.size() >= maxSentenceLength) continue;
 
+                // Early termination: 25% chance to stop at good ending after 8 words
                 if (beam.words.size() >= 8) {
                     String lastWord = beam.getLastWord();
                     String lastTag = db.getPOSTag(lastWord);
                     if (GOOD_ENDING_TAGS.contains(lastTag) && !BAD_ENDING_WORDS.contains(lastWord)) {
                         if (random.nextDouble() < 0.25) {
-                            continue; // 25% chance to stop and keep this beam as-is
+                            continue; 
                         }
                     }
                 }
 
-                // Get natural next words from corpus
+                // Get next word candidates from corpus
                 String currentWord = beam.getLastWord();
                 List<DatabaseManager.WordPair> nextWords = db.getNextWords(currentWord, 30);
 
                 if (nextWords.isEmpty()) continue;
 
-                // Evaluate each possible next word
+                // Score and extend beam for each candidate
                 for (DatabaseManager.WordPair pair : nextWords) {
                     String nextWord = pair.getRightWord();
 
@@ -95,7 +101,7 @@ public class BeamSearchSentenceGenerator {
 
             if (allCandidates.isEmpty()) break;
 
-            // Sort all candidates by quality
+            // Sort by violations first, then score; keep top-k diverse beams
             allCandidates.sort((a, b) -> {
                 // First: prefer fewer violations
                 if (a.violations != b.violations) {
@@ -109,7 +115,7 @@ public class BeamSearchSentenceGenerator {
             beams = selectDiverseBeams(allCandidates, beamWidth);
         }
 
-        // Pick the best completed sentence
+        // Select best beam by average score per word
         Beam best = beams.stream()
                 .max(Comparator.comparingDouble(b -> b.cumulativeScore / b.words.size()))
                 .orElse(beams.get(0));
@@ -127,9 +133,9 @@ public class BeamSearchSentenceGenerator {
             finalSentence = Character.toUpperCase(finalSentence.charAt(0)) + finalSentence.substring(1);
         }
 
+        // Normalize score: base 50 + avgScore bonus + length bonus - violation penalty
         long duration = System.currentTimeMillis() - startTime;
 
-        // Score calculation: SAME AS GREEDY
         double baseScore = 50;
         double avgWordScore = best.cumulativeScore / Math.max(1, cleanWords.size());
 
@@ -153,9 +159,7 @@ public class BeamSearchSentenceGenerator {
         );
     }
 
-    /**
-     * Select diverse beams - avoid keeping beams with very similar endings
-     */
+    // Ensures beam diversity by preventing beams with identical endings
     private List<Beam> selectDiverseBeams(List<Beam> candidates, int count) {
         List<Beam> selected = new ArrayList<>();
         Set<String> usedEndings = new HashSet<>();
@@ -179,7 +183,7 @@ public class BeamSearchSentenceGenerator {
             }
         }
 
-        // If we couldn't get enough diverse beams, just take the best remaining ones
+        // Fallback: add best remaining beams if not enough unique ones
         if (selected.size() < count && candidates.size() > selected.size()) {
             for (Beam candidate : candidates) {
                 if (selected.size() >= count) break;
@@ -192,9 +196,8 @@ public class BeamSearchSentenceGenerator {
         return selected;
     }
 
-    /**
-     * Grammar scoring - same as Greedy
-     */
+
+    // POS transition scoring: positive for good grammar, negative for violations
     private double getGrammarScore(String currentTag, String nextTag) {
         // Excellent transitions
         if (currentTag.equals("DET") && nextTag.equals("NOUN")) return 3.0;
@@ -225,7 +228,7 @@ public class BeamSearchSentenceGenerator {
         return 0.5;
     }
 
-    // ================= SIMPLE BEAM CLASS =================
+    // Tracks a single sentence path: words, cumulative score, and violation count
     private static class Beam {
         List<String> words;
         double cumulativeScore;
@@ -256,6 +259,8 @@ public class BeamSearchSentenceGenerator {
         }
     }
 
+    
+    // Output container with sentence, score, and metadata
     public static class SentenceResult {
         String sentence, metadata, algorithm;
         double score;

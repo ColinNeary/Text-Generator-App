@@ -1,9 +1,12 @@
+// Written by Kai Chang, cxc210040
+
 package com.example.backend.sentencegen;
 
 import com.example.backend.DatabaseManager;
 import java.sql.SQLException;
 import java.util.*;
 
+// Generates sentences using greedy algorithm: single path, picks best local candidate
 public class GreedySentenceGenerator {
     private final DatabaseManager db;
     private final int maxSentenceLength;
@@ -31,6 +34,7 @@ public class GreedySentenceGenerator {
         this.debugMode = debugMode;
     }
 
+    // Single-path generation: picks best candidate at each step
     public SentenceResult generateSentence(String startWord) throws SQLException {
         startWord = startWord.trim().toLowerCase();
         if (!db.wordExists(startWord)) {
@@ -51,10 +55,9 @@ public class GreedySentenceGenerator {
             String currentWord = sentence.get(sentence.size() - 1);
             String currentTag = db.getPOSTag(currentWord);
 
-            // Check if we can/should end the sentence
+            // Early termination: 30% chance after 6+ words at good ending
             if (sentence.size() >= 6) {
                 if (GOOD_ENDINGS.contains(currentTag) && !BAD_ENDING_WORDS.contains(currentWord)) {
-                    // 30% chance to end if we're at a good stopping point
                     if (random.nextDouble() < 0.3) {
                         break;
                     }
@@ -66,7 +69,7 @@ public class GreedySentenceGenerator {
                 break;
             }
 
-            // Get possible next words from corpus
+            // Get and filter candidates
             List<DatabaseManager.WordPair> candidates = db.getNextWords(currentWord, 30);
             if (candidates.isEmpty()) break;
 
@@ -99,10 +102,9 @@ public class GreedySentenceGenerator {
 
             if (validCandidates.isEmpty()) break;
 
-            // Sort by score (best first)
+            // Greedy choice: pick from top 5 for some randomness
             validCandidates.sort((a, b) -> Double.compare(b.score, a.score));
 
-            // Greedy choice: pick from top 5 with some randomness
             int sampleSize = Math.min(validCandidates.size(), 5);
             ScoredCandidate chosen = validCandidates.get(random.nextInt(sampleSize));
 
@@ -112,7 +114,7 @@ public class GreedySentenceGenerator {
             if (chosen.hasViolation) grammarViolations++;
         }
 
-        // Clean up bad endings
+        // Clean trailing bad endings
         while (sentence.size() > 1 && BAD_ENDING_WORDS.contains(sentence.get(sentence.size() - 1))) {
             sentence.remove(sentence.size() - 1);
         }
@@ -154,10 +156,7 @@ public class GreedySentenceGenerator {
         );
     }
 
-    /**
-     * Calculate grammar score for POS tag transitions
-     * Positive = good transition, Negative = grammar violation
-     */
+    // Same grammar scoring as Beam Search
     private double getGrammarScore(String currentTag, String nextTag) {
         // Excellent transitions
         if (currentTag.equals("DET") && nextTag.equals("NOUN")) return 3.0;
@@ -188,7 +187,7 @@ public class GreedySentenceGenerator {
         return 0.5;
     }
 
-    // Helper class for scored candidates
+    // Temporary holder for candidate word scores
     private static class ScoredCandidate {
         String word;
         String tag;
@@ -202,7 +201,8 @@ public class GreedySentenceGenerator {
             this.hasViolation = hasViolation;
         }
     }
-
+    
+    // Result container (extends Beam's for compatibility)
     public static class SentenceResult extends BeamSearchSentenceGenerator.SentenceResult {
         public SentenceResult(String s, double sc, String m, String a, int w, long t) {
             super(s, sc, m, a, w, t);

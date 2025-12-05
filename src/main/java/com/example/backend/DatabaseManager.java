@@ -1,8 +1,12 @@
+// Written by Kai Chang, cxc210040
+
 package com.example.backend;
 
 import java.sql.*;
 import java.util.*;
 
+
+// Database manager for word corpus, POS tags, and word pair probabilities
 public class DatabaseManager {
     private static final String URL = "jdbc:mysql://localhost:3306/"; // Put your database name
     private static final String USER = "root"; // Put your username
@@ -31,13 +35,14 @@ public class DatabaseManager {
         return connection;
     }
 
+    // Creates tables and adds POS column if missing
     private void initializeSchema() throws SQLException {
         executeUpdate("CREATE TABLE IF NOT EXISTS grammar_rules (left_tag VARCHAR(20), right_tag VARCHAR(20), occurrence INT, PRIMARY KEY (left_tag, right_tag))");
         try { executeQuery("SELECT pos_tag FROM words LIMIT 1"); }
         catch (SQLException e) { executeUpdate("ALTER TABLE words ADD COLUMN pos_tag VARCHAR(20) DEFAULT 'NOUN'"); }
     }
 
-    // ==================== EXPANDED DICTIONARY ====================
+    // Hardcoded dictionary for 500+ common words across POS categories
     private static final Map<String, String> KNOWN_WORDS = new HashMap<>();
 
     static {
@@ -99,8 +104,8 @@ public class DatabaseManager {
         return new StyleProfile(avgLen, avgComp);
     }
 
-    // ==================== IMPROVED TRAINING LOGIC ====================
 
+    // Multi-step POS tagging: dictionary → suffix patterns → statistical context
     public void assignStatisticalRoles() throws SQLException {
         System.out.println("Applying Advanced POS Tagging...");
 
@@ -216,6 +221,8 @@ public class DatabaseManager {
             return stmt.executeUpdate();
         }
     }
+
+    // Returns POS tag from dictionary or database
     public String getPOSTag(String word) throws SQLException {
         if (KNOWN_WORDS.containsKey(word)) return KNOWN_WORDS.get(word);
         try (ResultSet rs = executeQuery("SELECT pos_tag FROM words WHERE word_text = ?", word)) {
@@ -223,6 +230,8 @@ public class DatabaseManager {
         }
         return "NOUN";
     }
+
+    // Gets next words with probabilities from corpus
     public List<WordPair> getNextWords(String currentWord, int limit) throws SQLException {
         List<WordPair> pairs = new ArrayList<>();
         try (ResultSet rs = executeQuery("SELECT wp.left_word, wp.right_word, wp.pair_count, (wp.pair_count * 1.0 / w.word_count_total) as probability FROM word_pairs wp JOIN words w ON w.word_text = wp.left_word WHERE wp.left_word = ? ORDER BY probability DESC LIMIT ?", currentWord, limit)) {
@@ -252,6 +261,7 @@ public class DatabaseManager {
     }
     public void close() { try { if (connection != null && !connection.isClosed()) connection.close(); } catch (SQLException e) { e.printStackTrace(); } }
 
+    // Data carrier for word pair with probability
     public static class WordPair {
         private final String leftWord, rightWord; private final int pairCount; private final double probability;
         public WordPair(String l, String r, int c, double p) { this.leftWord=l; this.rightWord=r; this.pairCount=c; this.probability=p; }
