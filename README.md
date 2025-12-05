@@ -3,13 +3,14 @@ Group 33 Senior Project at UTD, Fall 2025
 
 ## Setting up MySQL Connection
 - On MySQL Workbench the user will create a  Standard TCP/IP connection with the Username "root"
-- Anything for the Password but as it is not an important DB, no password is recommended
+- Anything for the Password, but as it is not an important DB, Password is required
 - Select a usable port number
     - Test the connection before adding details to the JavaFX files
 - Save the Username & Password
 - Save & Exit the connection edit tab and right click the connection to then copy the JDBC URL
 
 ## Setting up JDBC Connection & Manager Class
+- The Classes that you will need to edit are DatabaseConnection.java & DatabaseManager.java
 - The section of code listed is in both classes    
 ```
 private static final String URL = "jdbc:mysql://localhost:3306/new_schema"; // Put your database name
