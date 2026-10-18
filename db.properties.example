@@ -1,0 +1,5 @@
+# Copy this file to db.properties and fill in your MySQL login.
+# db.properties is gitignored so your password never gets committed.
+db.url=jdbc:mysql://localhost:3306/team33db
+db.user=root
+db.password=

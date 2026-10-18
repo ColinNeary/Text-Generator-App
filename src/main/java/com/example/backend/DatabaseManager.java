@@ -8,9 +8,9 @@ import java.util.*;
 
 // Database manager for word corpus, POS tags, and word pair probabilities
 public class DatabaseManager {
-    private static final String URL = "jdbc:mysql://localhost:3306/"; // Put your database name
-    private static final String USER = "root"; // Put your username
-    private static final String PASSWORD = ""; // Put your database password
+    private static final String URL = DbConfig.URL;
+    private static final String USER = DbConfig.USER;
+    private static final String PASSWORD = DbConfig.PASSWORD;
 
     private static DatabaseManager instance;
     private Connection connection;

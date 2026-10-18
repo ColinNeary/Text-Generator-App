@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
+import com.example.backend.DbConfig;
+
 import java.sql.*;
 import java.util.*;
 import java.io.BufferedReader;
@@ -32,9 +34,9 @@ import java.time.LocalDate;
  *     Last modified: October 2, 2025
  */
 public class DatabaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/"; // Put your database name
-    private static final String USER = "root"; // Put your username
-    private static final String PASSWORD = ""; // Put your database password
+    private static final String URL = DbConfig.URL;
+    private static final String USER = DbConfig.USER;
+    private static final String PASSWORD = DbConfig.PASSWORD;
     private static boolean connectionShown = false;
     private Connection connectedSQL;
 
