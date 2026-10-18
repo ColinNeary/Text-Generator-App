@@ -77,9 +77,9 @@ The first run downloads dependencies and takes a minute or two. After that it st
 
 ## Using the app
 
-1. **Import text first.** Every feature works from imported data, so the other screens stay empty until you do this. Open **📂 Import File** and choose a `.txt`, `.docx` or `.pdf` file. `datasets/pride_and_prejudice_clean.txt` is a good starter. A full book takes a little while, and a progress bar shows how far along it is.
-2. **⚡ Auto Complete:** type or pick a starting word, then build a sentence one word at a time. **🎯 Greedy** suggests the most likely next words, and **🎲 Markov** suggests weighted random ones. Click a suggestion to add it, then **✅ Finish** or **🔄 Reset**.
-3. **📝 Sentence Generation:** enter a starting word, then click **🎯 Generate with Greedy** or **🔍 Generate with Beam Search** to generate a whole sentence.
+1. **Import text first.** Every feature works from imported data, so the other screens stay empty until you do this. Open **Import File** and choose a `.txt`, `.docx` or `.pdf` file. `datasets/pride_and_prejudice_clean.txt` is a good starter. A full book takes a little while, and a progress bar shows how far along it is.
+2. **Auto Complete:** type or pick a starting word, then build a sentence one word at a time. **Greedy** suggests the most likely next words, and **Markov** suggests weighted random ones. Click a suggestion to add it, then **Finish** or **Reset**.
+3. **Sentence Generation:** enter a starting word, then click **Generate with Greedy** or **Generate with Beam Search** to generate a whole sentence.
 
 Importing more files adds to the existing counts. To start over, truncate the tables in Workbench or rerun `database/setup.sql` on a fresh schema.
 
